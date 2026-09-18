@@ -1,4 +1,4 @@
-﻿# Supports-Buddy-Beats
+# Resources-Buddy-Beats
 
 Standalone Buddy Beats Resources viewer (browse, select, print).
 
