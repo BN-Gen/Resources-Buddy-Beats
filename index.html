@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Buddy Beats Resources</title>
+<style>
+:root{
+  --bn-navy:#163A59; --bn-primary:#075985; --bn-blue:#1788B8; --bn-light-blue:#EAF5FA;
+  --bn-gold:#F6D98A; --bn-white:#fff; --bn-border:#D9E0E5; --bn-text:#252A2E; --bn-muted:#68737D;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bn-white);color:var(--bn-text)}
+header{background:var(--bn-light-blue);border-bottom:3px solid var(--bn-gold);padding:0.85rem 1.25rem}
+.brand{font-weight:700;color:var(--bn-navy)}.brand span{color:var(--bn-blue);font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:1.25rem}
+h1{margin:0 0 0.35rem;color:var(--bn-navy);font-size:1.6rem;border-bottom:3px solid var(--bn-gold);display:inline-block;padding-bottom:0.25rem}
+.lede{color:var(--bn-muted);margin:0.75rem 0 1.25rem;max-width:40rem}
+.toolbar{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-bottom:1rem}
+input[type=search],select{border:1px solid var(--bn-border);border-radius:4px;padding:0.45rem 0.65rem;min-width:12rem}
+.btn{border:1px solid var(--bn-border);background:#fff;color:var(--bn-primary);border-radius:4px;padding:0.45rem 0.8rem;cursor:pointer;font:inherit}
+.btn-primary{background:#075985;border-color:#075985;color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.meta{font-size:0.75rem;color:var(--bn-blue);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+.card{border:1px solid var(--bn-border);border-radius:4px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.card.selected{outline:3px solid var(--bn-blue);outline-offset:1px}
+.card-cover{aspect-ratio:4/3;background:var(--bn-light-blue);display:flex;align-items:center;justify-content:center;padding:0.5rem;cursor:pointer}
+.card-cover img{max-width:100%;max-height:100%;object-fit:contain}
+.card-body{padding:0.7rem;display:flex;flex-direction:column;gap:0.35rem;flex:1}
+.card-body h2{margin:0;font-size:0.95rem;color:var(--bn-navy)}
+.card-body p{margin:0;font-size:0.8rem;color:var(--bn-muted)}
+.card-actions{display:flex;gap:0.4rem;margin-top:auto;padding-top:0.4rem}
+.lightbox{position:fixed;inset:0;background:rgba(22,58,89,.88);display:none;align-items:center;justify-content:center;padding:1rem;z-index:40}
+.lightbox.open{display:flex}
+.lightbox img{max-width:min(96vw,1100px);max-height:85vh;object-fit:contain;background:#fff}
+.lightbox .close{position:absolute;top:1rem;right:1rem}
+.print-root{display:none}
+@media print{
+  header,main,.no-print{display:none!important}
+  .print-root{display:block!important}
+  .print-sheet{page-break-after:always;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.4in}
+  .print-sheet:last-child{page-break-after:auto}
+  .print-sheet img{max-width:100%;max-height:calc(100vh - 1.2in);object-fit:contain}
+  .credit{margin-top:0.35rem;font-size:10pt;color:#555;text-align:center;line-height:1.35}
+}
+</style>
+</head>
+<body>
+<header class="no-print">
+  <div class="brand">Buddy Beats Resources <span>· Bridgette Nicholson</span></div>
+</header>
+<main class="no-print">
+  <p class="meta">Resources</p>
+  <h1>Buddy Beats Resources</h1>
+  <p class="lede">Rhythm and movement resources pages and composite sheets.</p>
+  <div class="toolbar">
+    <input type="search" id="q" placeholder="Search pages…" />
+    <select id="cat"><option value="">All categories</option></select>
+    <button class="btn" id="selectVisible" type="button">Select visible</button>
+    <button class="btn" id="clearSel" type="button">Clear</button>
+    <button class="btn btn-primary" id="printSel" type="button" disabled>Print selected (0)</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+<div class="lightbox no-print" id="lightbox"><button class="btn close" id="closeLb" type="button">Close</button><img id="lbImg" alt="" /></div>
+<div class="print-root" id="printRoot"></div>
+<script>
+const DATA = {"title":"Buddy Beats Resources","description":"Rhythm and movement resources pages and composite sheets.","pages":[{"id":"buddy-beats-001","title":"Panel Activity Cards Sep16","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-activity-cards-sep16.png","orientation":"landscape"},{"id":"buddy-beats-002","title":"Panel Core Activities Set A","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-core-activities-set-a.png","orientation":"landscape"},{"id":"buddy-beats-003","title":"Panel Core Activities Set B","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-core-activities-set-b.png","orientation":"landscape"},{"id":"buddy-beats-004","title":"Panel Core Activities Set C","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-core-activities-set-c.png","orientation":"landscape"},{"id":"buddy-beats-005","title":"Panel Program Overview Cards","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-program-overview-cards.png","orientation":"landscape"},{"id":"buddy-beats-006","title":"Panel Program Theme Cards","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-program-theme-cards.png","orientation":"landscape"},{"id":"buddy-beats-007","title":"Panel Skill Building Cards Set A","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-skill-building-cards-set-a.png","orientation":"landscape"},{"id":"buddy-beats-008","title":"Panel Skill Building Cards Set B","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-skill-building-cards-set-b.png","orientation":"landscape"},{"id":"buddy-beats-009","title":"Panel Skill Building Cards Set C","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-skill-building-cards-set-c.png","orientation":"landscape"},{"id":"buddy-beats-010","title":"Panel Skill Building Cards Set D","category":"Composite Sheets","description":"10-panel composite sheet (kept whole; individual cards are in Cards categories).","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-10-panel-skill-building-cards-set-d.png","orientation":"landscape"},{"id":"buddy-beats-011","title":"Beat Pathways And Sequences Alt","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-beat-pathways-and-sequences-alt.png","orientation":"portrait"},{"id":"buddy-beats-012","title":"Beat Pathways And Sequences","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-beat-pathways-and-sequences.png","orientation":"portrait"},{"id":"buddy-beats-013","title":"Branding Option 1 Rhythm Paths","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-branding-option-1-rhythm-paths.png","orientation":"landscape"},{"id":"buddy-beats-014","title":"Branding Option 2 Style Guide","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-branding-option-2-style-guide.png","orientation":"landscape"},{"id":"buddy-beats-015","title":"Buddy Band Cue System","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-buddy-band-cue-system.png","orientation":"portrait"},{"id":"buddy-beats-016","title":"Classroom Rhythm Stations Screenshot Alt","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-classroom-rhythm-stations-screenshot-alt.png","orientation":"landscape"},{"id":"buddy-beats-017","title":"Classroom Rhythm Stations","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-classroom-rhythm-stations.png","orientation":"portrait"},{"id":"buddy-beats-018","title":"Draw Write And Build The Beat","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-draw-write-and-build-the-beat.png","orientation":"portrait"},{"id":"buddy-beats-019","title":"Group Roles And Collaboration Signals","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-group-roles-and-collaboration-signals.png","orientation":"portrait"},{"id":"buddy-beats-020","title":"Movement Pattern Builder","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-movement-pattern-builder.png","orientation":"portrait"},{"id":"buddy-beats-021","title":"Pathways And Pattern Toolkit","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-pathways-and-pattern-toolkit.png","orientation":"portrait"},{"id":"buddy-beats-022","title":"Rhythm Effects Library","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-rhythm-effects-library.png","orientation":"portrait"},{"id":"buddy-beats-023","title":"Rhythm Notation And Sequence Marks","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-rhythm-notation-and-sequence-marks.png","orientation":"portrait"},{"id":"buddy-beats-024","title":"Sound Move Record Studio Screenshot Alt","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-sound-move-record-studio-screenshot-alt.png","orientation":"portrait"},{"id":"buddy-beats-025","title":"Sound Move Record Studio","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-sound-move-record-studio.png","orientation":"portrait"},{"id":"buddy-beats-026","title":"Typing To The Beat","category":"Resources Pages","description":"Buddy Beats resources page.","imageUrl":"https://mediaforactivities.general-241.workers.dev/Workbook-materials-for-programs/Buddy%20Beats%20-%20Organized/01%20Workbook%20v1%20-%20Candidates/buddy-beats-typing-to-the-beat.png","orientation":"portrait"}],"copyright":["Copyright 2026","BridgetteNicholson.com","Permission to use with your own students and children.","@bridgettenicholson"]};
+const selected = new Set();
+const grid = document.getElementById("grid");
+const cat = document.getElementById("cat");
+const q = document.getElementById("q");
+const printBtn = document.getElementById("printSel");
+const cats = [...new Set(DATA.pages.map(p => p.category).filter(Boolean))].sort();
+cats.forEach(c => { const o=document.createElement("option"); o.value=c; o.textContent=c; cat.appendChild(o); });
+
+function filtered(){
+  const term = q.value.trim().toLowerCase();
+  const c = cat.value;
+  return DATA.pages.filter(p => {
+    if (c && p.category !== c) return false;
+    if (!term) return true;
+    return [p.title,p.category,p.description].join(" ").toLowerCase().includes(term);
+  });
+}
+function syncPrint(){
+  printBtn.disabled = selected.size === 0;
+  printBtn.textContent = "Print selected (" + selected.size + ")";
+}
+function render(){
+  const pages = filtered();
+  grid.innerHTML = "";
+  pages.forEach(p => {
+    const card = document.createElement("article");
+    card.className = "card" + (selected.has(p.id) ? " selected" : "");
+    card.innerHTML = '<div class="card-cover" data-open="'+p.id+'"><img src="'+p.imageUrl+'" alt="" loading="lazy" /></div>'+
+      '<div class="card-body"><h2></h2><p></p><div class="card-actions"><button class="btn btn-primary" data-toggle="'+p.id+'" type="button">Select</button></div></div>';
+    card.querySelector("h2").textContent = p.title;
+    card.querySelector("p").textContent = p.category || "";
+    card.querySelector("[data-toggle]").textContent = selected.has(p.id) ? "Selected" : "Select";
+    grid.appendChild(card);
+  });
+  syncPrint();
+}
+grid.addEventListener("click", e => {
+  const open = e.target.closest("[data-open]");
+  if (open) {
+    const page = DATA.pages.find(p => p.id === open.dataset.open);
+    if (!page) return;
+    document.getElementById("lbImg").src = page.imageUrl;
+    document.getElementById("lightbox").classList.add("open");
+    return;
+  }
+  const tog = e.target.closest("[data-toggle]");
+  if (tog) {
+    const id = tog.dataset.toggle;
+    if (selected.has(id)) selected.delete(id); else selected.add(id);
+    render();
+  }
+});
+document.getElementById("closeLb").onclick = () => document.getElementById("lightbox").classList.remove("open");
+document.getElementById("lightbox").onclick = e => { if (e.target.id === "lightbox") e.currentTarget.classList.remove("open"); };
+q.oninput = render; cat.onchange = render;
+document.getElementById("selectVisible").onclick = () => { filtered().forEach(p => selected.add(p.id)); render(); };
+document.getElementById("clearSel").onclick = () => { selected.clear(); render(); };
+document.getElementById("printSel").onclick = async () => {
+  const pages = DATA.pages.filter(p => selected.has(p.id));
+  const root = document.getElementById("printRoot");
+  root.innerHTML = "";
+  for (const p of pages) {
+    const sheet = document.createElement("div");
+    sheet.className = "print-sheet";
+    const img = document.createElement("img");
+    img.src = p.imageUrl;
+    img.alt = p.title;
+    sheet.appendChild(img);
+    const credit = document.createElement("div");
+    credit.className = "credit";
+    credit.innerHTML = DATA.copyright.map(l => "<div>"+l+"</div>").join("");
+    sheet.appendChild(credit);
+    root.appendChild(sheet);
+  }
+  await Promise.all([...root.querySelectorAll("img")].map(img => img.complete ? null : new Promise(r => { img.onload=r; img.onerror=r; })));
+  window.print();
+};
+render();
+</script>
+</body>
+</html>
